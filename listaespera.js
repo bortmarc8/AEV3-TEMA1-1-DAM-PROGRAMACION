@@ -37,4 +37,6 @@ function menu() {
 }
 
 
- 
+function agregar() {
+    rl = require('readline-sync');
+}
