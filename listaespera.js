@@ -1,4 +1,4 @@
-//Función de display del menú
+// Función de display del menú
 function menu() {
     // Variables
     let rl = require('readline-sync');
@@ -20,7 +20,7 @@ function menu() {
 
     // Pregunta para seleccionar el menú
     do {
-        input_menu = rl.questionInt("Introduce opción (1..8): ");
+        input_menu = rl.questionInt("Introduce opcion (1..8): ");
 
         if (input_menu > 0 && input_menu < 9) {
             respuesta = false;
@@ -31,12 +31,62 @@ function menu() {
     } while (respuesta);
 
 
-    //Salida de la función
+    // Output de la función
     return input_menu;
     
 }
 
+// Función de agrecación a la cola.
+function agregar(lista) {
+    // Variables
+    let arreglo = lista;
+    let rl = require('readline-sync');
+    let respuesta;
+    let volver;
 
-function agregar() {
-    rl = require('readline-sync');
+    // Agregación / creación al array y pregunta de si quiere añadir más personas a la cola.
+    do {
+        respuesta = rl.question("Introduce el nombre: ")
+        if (respuesta != '') {
+            if (arreglo != []) {
+                if (arreglo.indexOf(respuesta) == -1) {
+                    arreglo.push(respuesta);
+
+                } else {
+                    console.log("Ya existe una persona con el mismo nombre, operación cancelada.");
+
+                }
+            }else{
+                let arreglo = new Array();
+                arreglo = arreglo.push(respuesta);
+
+            }
+            volver = rl.question("¿Quieres añadir a alguien mas?: (S = Si): ");
+            volver = volver.toUpperCase();
+
+        } else {
+            console.log("No puedes dejar el campo vacio.");
+            volver = 'S';
+        }
+
+    } while (volver == 'S');
+    
+    // Output de la función.
+    console.log(arreglo);
+    
+    return arreglo;
+}
+
+let lista = [];
+
+switch (menu()) {
+    case 1:
+        console.clear();
+        agregar(lista);
+        break;
+
+    default:
+        console.log("Programa finalizado");
+        
+        break;
 }
