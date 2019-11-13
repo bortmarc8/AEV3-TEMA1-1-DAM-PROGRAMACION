@@ -1,6 +1,6 @@
 // Funciones (línea 4 hasta x)
 
-// Función de display del menú.
+// Función de display del menú. (Retorna el numero seleccionado por el usuario)
 function menu() {
     // Variables
     let rl = require('readline-sync');
@@ -38,7 +38,7 @@ function menu() {
     
 }
 
-// Función de agrecación a la cola.
+// Función de agrecación a la cola. (Retorna la varsión actualizada de la cola)
 function agregar(lista) {
     // Variables
     let arreglo = lista;
@@ -46,32 +46,33 @@ function agregar(lista) {
     let respuesta;
     let volver;
 
+    console.clear();
+
     // Agregación / creación al array y pregunta de si quiere añadir más personas a la cola.
     do {
-        respuesta = rl.question("Introduce el nombre: ")
+        respuesta = rl.question("\nIntroduce el nombre: ")
         if (respuesta != '') {
-            if (arreglo != []) {
+            if (arreglo.lenght != []) {
                 if (arreglo.indexOf(respuesta) == -1) {
                     arreglo.push(respuesta);
 
                 } else {
-                    console.log("Ya existe una persona con el mismo nombre, operación cancelada.");
+                    console.log("\nYa existe una persona con el mismo nombre, operación cancelada.");
 
                 }
             }else{
                 let arreglo = new Array();
-                arreglo = arreglo.push(respuesta);
+                arreglo.push(respuesta);
 
             }
             volver = rl.question("¿Quieres añadir a alguien mas?: (S = Si): ");
-            volver = volver.toUpperCase();
 
         } else {
-            console.log("No puedes dejar el campo vacio.");
+            console.log("\nNo puedes dejar el campo vacio.");
             volver = 'S';
         }
 
-    } while (volver == 'S');
+    } while (volver.toUpperCase() == 'S');
     
     // Output de la función.
     console.log(arreglo);
@@ -79,22 +80,22 @@ function agregar(lista) {
     return arreglo;
 }
 
-// Función de paso de turno en la cola.
+// Función de paso de turno en la cola. (Retorna la varsión actualizada de la cola)
 function siguiente(lista) {
+    console.clear();
     let rl = require('readline-sync');
     let pregunta;
     let arreglo = lista;
-    let salir;
 
     // Si el array no está vacio imprime la primera posición y eliminala.
     do {
-        if (arreglo != []) {
+        if (arreglo.lenght != 0 && arreglo[0] != undefined) {
             console.log("Pasa el cliente",arreglo[0],"a la mesa");
-            arreglo = arreglo.shift();
+            arreglo.shift();
         
         } else {
             console.log("No hay ninguna lista creada o está vacia, para acceder a esta funcionalidad deberás crear una lista nueva o cargarla.");
-            salir = true;
+
         } 
 
         pregunta = rl.question("Pasar otro = S, salir = Otro: ");
@@ -104,17 +105,19 @@ function siguiente(lista) {
     return arreglo;
 }
 
-// Función para borrar clientes impacientes.
+// Función para borrar clientes impacientes. (Retorna la varsión actualizada de la cola)
 function borrar(lista) {
     let arreglo = lista;
     let rl = require('readline-sync');
     let respuesta;
     let pregunta;
 
+    console.clear();
+
     do {
         respuesta = rl.question("Introduce el nombre de la persona a borrar: ");
         if (arreglo.indexOf(respuesta) != -1) {
-            arreglo = arreglo.splice(arreglo.indexOf(respuesta),arreglo.indexOf(respuesta));
+            arreglo.splice(arreglo.indexOf(respuesta),arreglo.indexOf(respuesta));
         
         } else {
             console.log("El cliente no está en la cola.");
@@ -129,12 +132,16 @@ function borrar(lista) {
 
 }
 
+// Función para visualizar el array con la lista (Sin retorno)
 function consulta(lista) {
+
+    console.clear();
+
     arreglo = lista;
     if (arreglo != []) {
         console.log(arreglo)
     } else {
-        console.log("la lista está vacia");
+        console.log("La lista está vacia");
         
     }
 }
@@ -146,12 +153,13 @@ function consulta_pos(lista) {
     let respuesta;
     let pregunta;
 
+    console.clear();
+
     do {
         respuesta = rl.question("Introduce el nombre de la persona para ver su turno: ");
         if (arreglo.indexOf(respuesta) != -1) {
             console.log("\n",arreglo[arreglo.indexOf(respuesta)],"está en la posición",arreglo.indexOf(respuesta)+1);
             
-                
         } else {
              console.log("\nEsa persona no está en la lista");
                 
@@ -165,36 +173,37 @@ function consulta_pos(lista) {
 
 // Procedimiento para guardar la lista. (Sin retorno)
 function guardar(lista) {
+    // Variables
     let fs = require('fs');
-    let escritura = fs.createWriteStream('archivo.txt');
-    let ruta = escritura.path;
     let arreglo = lista;
-    
-    if (lista != []) {
-    
-        // Escribir el dato
-        arreglo.forEach(valor => escritura.write(`${valor}\n`));
-    
-        // Cuando esté terminado mostrar la ruta y verificación
-        escritura.on('finish', () => {
-        console.log(`Se ha guardado la lista en ${ruta}`);
-        });
-    
-        // Mostrar si hay algún error
-        escritura.on('error', (error) => {
-        console.error(`Ha habido un error al guardar la lista en ${ruta} => ${error}`)
-        });
-    
-        // Cerramos la comunicación
-        escritura.end();
 
+    console.clear();
+    
+    if (lista[0] != undefined) {
+        // Si la lista no esta vacía abrir el fichero lista, volcar el contenido del array y cerrar el archivo
+        let fd = fs.openSync('lista', 'w');
+        fs.writeSync(fd, arreglo);
+        fs.closeSync(fd);
+    
     } else {
         console.log("La lista está vacía, es inecesario guardarla");
         
     }
 }
 
+// Función para leer la lista (Retorna la lista guardada en el archivo lista)
+function leer(lista) {
+    let arreglo = lista;
+    let fs = require('fs');  
+
+    arreglo = fs.openSync('lista', 'r');
+    fs.closeSync(arreglo);
+
+    return arreglo;
+}
+
 // Comienzo del programa.
+console.clear();
 
 let lista = [];
 let salir;
@@ -202,37 +211,35 @@ let salir;
 do {
     switch (menu()) {
         case 1:
-            console.clear();
             lista = agregar(lista);
             break;
     
         case 2:
-            console.clear();
             lista = siguiente(lista);
             break;
     
         case 3: 
-            console.clear();
             lista = borrar(lista);
             break;
 
         case 4:
-            console.clear();
-
+            consulta_pos(lista);
             break;
 
         case 5:
-            console.clear();
-            consulta_pos(lista);
+            consulta(lista);
             break;
         
         case 6:
-            console.clear();
             guardar(lista);
             break;
+
+        case 7:
+            lista = leer(lista);
+            break;
     
-        default:
-            console.log("Programa finalizado");
+        case 8:
+            console.log("\nPrograma finalizado...");
             salir = true;
             break;
     }
