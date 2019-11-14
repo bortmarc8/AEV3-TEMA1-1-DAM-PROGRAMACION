@@ -1,7 +1,12 @@
-// Funciones (línea 4 hasta 201)
+// Funciones (desde la línea 4 hasta la 169)
 
-// Función de display del menú. (Retorna el numero seleccionado por el usuario)
+
 function menu() {
+    /**
+    * @function menu - Muetra el menú y comprueba que no hayan bugs en el mismo.
+    * @returns {int} - Retorna un número entre 0 y 8 seleccionado por el usuario
+    */
+
     // Variables
     let rl = require('readline-sync');
     let input_menu;
@@ -27,7 +32,7 @@ function menu() {
         if (input_menu > 0 && input_menu < 9) {
             respuesta = false;
         } else {
-            console.log("\nOpción incorrecta");
+            console.log("\nFUNCION NO PROGRAMADA");
         }
         
     } while (respuesta);
@@ -40,6 +45,12 @@ function menu() {
 
 // Función de agrecación a la cola. (Retorna la varsión actualizada de la cola)
 function agregar(lista) {
+    /**
+    * @function agregar - Añade uno o varios usuarios al array lista y hace las comprobaciones pertinentes para el correcto funcionamiento del programa.
+    * @param {array} - Array con la lista (puede estar vacio)
+    * @returns {array} - Retorna un array con los usuarios agregados anteriormente
+    */
+
     // Variables
     let arreglo = lista;
     let rl = require('readline-sync');
@@ -84,6 +95,11 @@ function agregar(lista) {
 
 // Función de paso de turno en la cola. (Retorna la varsión actualizada de la cola)
 function siguiente(lista) {
+    /**
+    * @function siguiente - Elimina uno o varios usuarios de la lista empezando por la primera posición (Pasan a la mesa)
+    * @param {array} - Array con la lista.
+    * @returns {array} - Retorna un array con los usuarios eliminados.
+    */
     console.clear();
     let rl = require('readline-sync');
     let pregunta;
@@ -103,12 +119,19 @@ function siguiente(lista) {
         pregunta = rl.question("Pasar otro = S, salir = Otro: ");
 
     } while (pregunta.toUpperCase() == 'S');
+
+    console.clear();
     
     return arreglo;
 }
 
 // Función para borrar clientes impacientes. (Retorna la varsión actualizada de la cola)
 function borrar(lista) {
+    /**
+    * @function borrar - Dado un usuario por input lo busca en el array y lo elimina
+    * @param {array} - Array con la lista (puede estar vacio)
+    * @returns {array} - Retorna un array con los usuarios eliminados
+    */
     // Varibles
     let arreglo = lista;
     let rl = require('readline-sync');
@@ -139,24 +162,33 @@ function borrar(lista) {
 
 // Función para visualizar el array con la lista (Sin retorno)
 function consulta(lista) {
+    /**
+    * @function consulta - Muestra gráficamente el estado de la lista.
+    * @param {array} - Array con la lista (puede estar vacio.
+    */
     // Importación de readline-sync
     let rl = require('readline-sync');
     console.clear();
 
     // Visualuzación gráfica del array
     arreglo = lista;
-    if (arreglo != []) {
-        console.log(arreglo)
+    if (arreglo[0] != undefined) {
+        console.log("Visualizando lista...");
+        console.log(arreglo);
     } else {
         console.log("La lista está vacia");
         
     }
 
-    rl.question('Presiona enter para volver al menú principal...');
+    rl.question('\nPresiona enter para volver al menú principal...');
 }
 
 // Procedimiento para visualizar el turno de un cliente. (Sin retorno)
 function consulta_pos(lista) {
+    /**
+    * @function consulta_pos - Dado un string consulta en que posición de la lista está, en caso de no estar muestra un mensaje.
+    * @param {array} - Array con la lista (puede estar vacio)
+    */
     // Variables
     let arreglo = lista;
     let rl = require('readline-sync');
@@ -184,6 +216,10 @@ function consulta_pos(lista) {
 
 // Procedimiento para guardar la lista. (Sin retorno)
 function guardar(lista) {
+    /**
+    * @function guardar - Guarda la lista en un documento
+    * @param {array} - Array con la lista (puede estar vacio)
+    */
     // Variables
     let fs = require('fs');
     let rl = require('readline-sync');
@@ -191,35 +227,45 @@ function guardar(lista) {
 
     console.clear();
     
-    if (lista[0] != undefined) {
-        // Si la lista no esta vacía abrir el fichero lista, volcar el contenido del array y cerrar el archivo
-        let fd = fs.openSync('lista', 'w');
-        fs.writeSync(fd, arreglo);
-        fs.closeSync(fd);
-        rl.question("Lista guardada correctamente, pulsa enter para salir...");
+    // Si la lista no esta vacía abrir el fichero lista, volcar el contenido del array y cerrar el archivo
+    let fd = fs.openSync('listado.txt', 'w');
+    fs.writeSync(fd, arreglo);
+    fs.closeSync(fd);
+    rl.question("Lista guardada correctamente, pulsa enter para salir...");
     
-    } else {
-        rl.question("La lista está vacía y es inecesario guardarla pulsa enter para salir...");
-    }
 
     
 }
 
 // Función para leer la lista guardada previamente (Retorna la lista guardada en el archivo lista)
 function leer() {
+    /**
+    * @function consulta_pos - Lee los datos de un archivo y los escribe con un formato correcto 
+    * @returns {array} - Array con la lista que había en el documento.
+    */
     // Variables
     let fs = require('fs');
     let rl = require('readline-sync');
 
     console.clear();
 
-    // Lee el archivo lista con cofificación utf-8 y lo pasa de string a array separandolo por comas.
-    let arreglo = fs.readFileSync("lista", "utf-8");
-    arreglo = arreglo.split(',');
+    // Check si existe la lista para que no pete el programa si no existe el archivo.
+    if (fs.existsSync('listado.txt')) { 
+        // Lee el archivo lista con cofificación utf-8 y lo pasa de string a array separandolo por comas.
+        let arreglo = fs.readFileSync("listado.txt", "utf-8");
+        arreglo = arreglo.split(',');
+        rl.question("Cola cargada al programa, presiona enter para volver al menú principal...");
+        console.clear();
+        return arreglo;
 
-    rl.question("Cola cargada al programa, presiona enter para volver al menú principal...");
+      } else {
+          rl.question("No hay nada guardado, guarda una lista e intentalo de nuevo...");
+          console.clear();
+          arreglo = [];
+          return arreglo;
+
+      }
     
-    return arreglo;
 }
 
 // Comienzo del programa.
