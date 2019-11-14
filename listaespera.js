@@ -1,4 +1,4 @@
-// Funciones (línea 4 hasta x)
+// Funciones (línea 4 hasta 201)
 
 // Función de display del menú. (Retorna el numero seleccionado por el usuario)
 function menu() {
@@ -48,7 +48,7 @@ function agregar(lista) {
 
     console.clear();
 
-    // Agregación / creación al array y pregunta de si quiere añadir más personas a la cola.
+    // Agregación o creación del array y pregunta si quiere añadir más personas a la cola.
     do {
         respuesta = rl.question("\nIntroduce el nombre: ")
         if (respuesta != '') {
@@ -60,11 +60,13 @@ function agregar(lista) {
                     console.log("\nYa existe una persona con el mismo nombre, operación cancelada.");
 
                 }
+
             }else{
                 let arreglo = new Array();
                 arreglo.push(respuesta);
 
             }
+
             volver = rl.question("¿Quieres añadir a alguien mas?: (S = Si): ");
 
         } else {
@@ -107,6 +109,7 @@ function siguiente(lista) {
 
 // Función para borrar clientes impacientes. (Retorna la varsión actualizada de la cola)
 function borrar(lista) {
+    // Varibles
     let arreglo = lista;
     let rl = require('readline-sync');
     let respuesta;
@@ -114,10 +117,12 @@ function borrar(lista) {
 
     console.clear();
 
+    // Proceso de borrado
     do {
         respuesta = rl.question("Introduce el nombre de la persona a borrar: ");
         if (arreglo.indexOf(respuesta) != -1) {
             arreglo.splice(arreglo.indexOf(respuesta),arreglo.indexOf(respuesta));
+            console.log("Cliente borrado de la cola.");
         
         } else {
             console.log("El cliente no está en la cola.");
@@ -134,9 +139,11 @@ function borrar(lista) {
 
 // Función para visualizar el array con la lista (Sin retorno)
 function consulta(lista) {
-
+    // Importación de readline-sync
+    let rl = require('readline-sync');
     console.clear();
 
+    // Visualuzación gráfica del array
     arreglo = lista;
     if (arreglo != []) {
         console.log(arreglo)
@@ -144,10 +151,13 @@ function consulta(lista) {
         console.log("La lista está vacia");
         
     }
+
+    rl.question('Presiona enter para volver al menú principal...');
 }
 
 // Procedimiento para visualizar el turno de un cliente. (Sin retorno)
 function consulta_pos(lista) {
+    // Variables
     let arreglo = lista;
     let rl = require('readline-sync');
     let respuesta;
@@ -155,6 +165,7 @@ function consulta_pos(lista) {
 
     console.clear();
 
+    // Proceso de consulta.
     do {
         respuesta = rl.question("Introduce el nombre de la persona para ver su turno: ");
         if (arreglo.indexOf(respuesta) != -1) {
@@ -175,6 +186,7 @@ function consulta_pos(lista) {
 function guardar(lista) {
     // Variables
     let fs = require('fs');
+    let rl = require('readline-sync');
     let arreglo = lista;
 
     console.clear();
@@ -184,21 +196,29 @@ function guardar(lista) {
         let fd = fs.openSync('lista', 'w');
         fs.writeSync(fd, arreglo);
         fs.closeSync(fd);
+        rl.question("Lista guardada correctamente, pulsa enter para salir...");
     
     } else {
-        console.log("La lista está vacía, es inecesario guardarla");
-        
+        rl.question("La lista está vacía y es inecesario guardarla pulsa enter para salir...");
     }
+
+    
 }
 
-// Función para leer la lista (Retorna la lista guardada en el archivo lista)
-function leer(lista) {
-    let arreglo = lista;
-    let fs = require('fs');  
+// Función para leer la lista guardada previamente (Retorna la lista guardada en el archivo lista)
+function leer() {
+    // Variables
+    let fs = require('fs');
+    let rl = require('readline-sync');
 
-    arreglo = fs.openSync('lista', 'r');
-    fs.closeSync(arreglo);
+    console.clear();
 
+    // Lee el archivo lista con cofificación utf-8 y lo pasa de string a array separandolo por comas.
+    let arreglo = fs.readFileSync("lista", "utf-8");
+    arreglo = arreglo.split(',');
+
+    rl.question("Cola cargada al programa, presiona enter para volver al menú principal...");
+    
     return arreglo;
 }
 
@@ -243,4 +263,5 @@ do {
             salir = true;
             break;
     }
+    
 } while (!salir);
